@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Tweet } from 'src/app/models/tweet';
 
 @Component({
   selector: 'app-tweet-item',
@@ -6,4 +7,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./tweet-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TweetItemComponent {}
+export class TweetItemComponent {
+  imgError: boolean | undefined;
+  @Input() tweet!: Tweet;
+}

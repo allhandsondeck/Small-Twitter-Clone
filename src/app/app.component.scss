@@ -3,10 +3,23 @@
   flex-direction: column;
 }
 
+.tweet-filters {
+  margin-bottom: 30px;
+}
+
 @media (min-width: 769px) {
   .app-content {
     justify-content: center;
     flex-direction: row;
+  }
+
+  .tweet-filters {
+    width: 300px;
+    margin-right: 30px;
+  }
+
+  .tweet-list {
+    width: 600px;
   }
 }
 

@@ -1,1 +1,3 @@
-<app-tweet-item></app-tweet-item>
+<ng-container *ngIf="tweets$ | async as tweets">
+  <app-tweet-item *ngFor="let tweet of tweets"></app-tweet-item>
+</ng-container>

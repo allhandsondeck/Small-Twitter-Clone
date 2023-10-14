@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Tweet } from 'src/app/models/tweet';
 import { DataService } from 'src/app/services/data.service';
 
@@ -8,13 +9,11 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./tweet-list.component.scss'],
 })
 export class TweetListComponent implements OnInit {
-  tweets: Tweet[] = [];
+  tweets$: Observable<Tweet[]> | undefined;
 
   constructor(private dataService: DataService) {}
 
   ngOnInit() {
-    this.dataService.getTweetData().subscribe((tweets) => {
-      this.tweets = tweets;
-    });
+    this.tweets$ = this.dataService.getTweetData();
   }
 }

@@ -1,0 +1,12 @@
+.app-content {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 769px) {
+  .app-content {
+    justify-content: center;
+    flex-direction: row;
+  }
+}
+

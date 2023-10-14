@@ -1,1 +1,12 @@
-<p>pagination works!</p>
+<mat-form-field class="example-form-field">
+  <mat-label>Post/page</mat-label>
+  <input matInput type="number" min="1" max="10" [(ngModel)]="value" />
+</mat-form-field>
+
+<h2>Pages:</h2>
+
+<div class="example-button-row">
+  <button mat-raised-button>Basic</button>
+  <button mat-raised-button>Basic</button>
+  <button mat-raised-button>Basic</button>
+</div>

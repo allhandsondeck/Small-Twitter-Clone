@@ -9,6 +9,13 @@ import { VisibilityFilterComponent } from './components/visibility-filter/visibi
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { TweetListComponent } from './components/tweet-list/tweet-list.component';
 import { TweetItemComponent } from './components/tweet-item/tweet-item.component';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -20,7 +27,17 @@ import { TweetItemComponent } from './components/tweet-item/tweet-item.component
     TweetListComponent,
     TweetItemComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule],
+  imports: [
+    FormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatRadioModule,
+    MatCardModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

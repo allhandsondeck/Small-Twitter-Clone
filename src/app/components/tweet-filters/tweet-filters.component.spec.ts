@@ -1,21 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { TweetFiltersComponent } from './tweet-filters.component';
 
 describe('TweetFiltersComponent', () => {
-  let component: TweetFiltersComponent;
-  let fixture: ComponentFixture<TweetFiltersComponent>;
+  let spectator: Spectator<TweetFiltersComponent>;
+  const createComponent = createComponentFactory(TweetFiltersComponent);
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [TweetFiltersComponent]
-    });
-    fixture = TestBed.createComponent(TweetFiltersComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    spectator = createComponent();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

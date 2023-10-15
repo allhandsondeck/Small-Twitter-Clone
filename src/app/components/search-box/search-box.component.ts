@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { PaginationService } from 'src/app/services/pagination.service';
+import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'app-search-box',
@@ -8,15 +8,15 @@ import { PaginationService } from 'src/app/services/pagination.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchBoxComponent {
-  constructor(private paginationService: PaginationService) {}
+  constructor(private FilterService: FilterService) {}
   value = '';
 
   onSearchChange(keyword: string) {
-    this.paginationService.searchKeywordSubject.next(keyword);
+    this.FilterService.searchKeywordSubject.next(keyword);
   }
 
   clearSearch() {
     this.value = '';
-    this.paginationService.searchKeywordSubject.next('');
+    this.FilterService.searchKeywordSubject.next('');
   }
 }

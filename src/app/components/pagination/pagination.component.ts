@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Subject } from 'rxjs';
-import { PaginationService } from 'src/app/services/pagination.service';
+import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'app-pagination',
@@ -9,18 +9,17 @@ import { PaginationService } from 'src/app/services/pagination.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationComponent {
-  constructor(private paginationService: PaginationService) {}
-  totalPageCount$: Subject<number> =
-    this.paginationService.totalPageCountSubject;
-  tweetsPerPage: number = this.paginationService.tweetsPerPageSubject.value;
+  constructor(private FilterService: FilterService) {}
+  totalPageCount$: Subject<number> = this.FilterService.totalPageCountSubject;
+  tweetsPerPage: number = this.FilterService.tweetsPerPageSubject.value;
 
   onPageChange(newPage: number) {
-    this.paginationService.currentPageSubject.next(newPage);
+    this.FilterService.currentPageSubject.next(newPage);
   }
 
   onTweetsPerPageChange(newTweetsPerPage: number) {
-    this.paginationService.tweetsPerPageSubject.next(newTweetsPerPage);
-    this.paginationService.currentPageSubject.next(1);
+    this.FilterService.tweetsPerPageSubject.next(newTweetsPerPage);
+    this.FilterService.currentPageSubject.next(1);
   }
 
   range(count: number): number[] {

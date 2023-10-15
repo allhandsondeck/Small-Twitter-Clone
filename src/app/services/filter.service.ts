@@ -5,7 +5,7 @@ import { VisibilityType } from '../enums/visibility-type.enum';
 @Injectable({
   providedIn: 'root',
 })
-export class PaginationService {
+export class FilterService {
   searchKeywordSubject: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );

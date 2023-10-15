@@ -9,7 +9,7 @@ import { Subject, combineLatest, of, switchMap, takeUntil } from 'rxjs';
 import { VisibilityType } from 'src/app/enums/visibility-type.enum';
 import { Tweet } from 'src/app/models/tweet';
 import { DataService } from 'src/app/services/data.service';
-import { PaginationService } from 'src/app/services/pagination.service';
+import { FilterService } from 'src/app/services/filter.service';
 
 @Component({
   selector: 'app-tweet-list',
@@ -23,7 +23,7 @@ export class TweetListComponent implements OnInit, OnDestroy {
 
   constructor(
     private dataService: DataService,
-    private paginationService: PaginationService,
+    private FilterService: FilterService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -35,10 +35,10 @@ export class TweetListComponent implements OnInit, OnDestroy {
         switchMap((tweets) => {
           return combineLatest([
             of(tweets),
-            this.paginationService.searchKeywordSubject,
-            this.paginationService.visibilityTypeSubject,
-            this.paginationService.currentPageSubject,
-            this.paginationService.tweetsPerPageSubject,
+            this.FilterService.searchKeywordSubject,
+            this.FilterService.visibilityTypeSubject,
+            this.FilterService.currentPageSubject,
+            this.FilterService.tweetsPerPageSubject,
           ]);
         })
       )
@@ -107,7 +107,7 @@ export class TweetListComponent implements OnInit, OnDestroy {
     const totalPageCount = Math.ceil(
       tweetsFilteredByVisibilityTypeLength / tweetsPerPage
     );
-    this.paginationService.totalPageCountSubject.next(totalPageCount);
+    this.FilterService.totalPageCountSubject.next(totalPageCount);
   }
 
   private getTweetsFilteredByPagination(

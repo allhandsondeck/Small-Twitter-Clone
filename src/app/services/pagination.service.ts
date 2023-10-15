@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { VisibilityType } from '../enums/visibility-type.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -10,4 +11,6 @@ export class PaginationService {
     5
   );
   totalPageCountSubject: Subject<number> = new Subject<number>();
+  visibilityTypeSubject: BehaviorSubject<VisibilityType> =
+    new BehaviorSubject<VisibilityType>(VisibilityType.AllTweets);
 }

@@ -2,11 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { Subject, combineLatest, startWith, takeUntil } from 'rxjs';
+import { Subject, combineLatest, of, switchMap, takeUntil } from 'rxjs';
+import { VisibilityType } from 'src/app/enums/visibility-type.enum';
 import { Tweet } from 'src/app/models/tweet';
 import { DataService } from 'src/app/services/data.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -18,11 +18,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TweetListComponent implements OnInit, OnDestroy {
-  allTweets: Tweet[] | undefined;
-  filteredTweets: Tweet[] | undefined;
-  currentPage: number = 1;
-  tweetsPerPage: number | undefined;
-  totalTweets: number | undefined;
+  tweets: Tweet[] | undefined;
   private destroy$: Subject<void> = new Subject();
 
   constructor(
@@ -32,42 +28,70 @@ export class TweetListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    combineLatest([
-      this.paginationService.currentPageSubject,
-      this.paginationService.tweetsPerPageSubject,
-    ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([newPage, newTweetsPerPage]) => {
-        this.currentPage = newPage;
-        this.tweetsPerPage = newTweetsPerPage;
-        this.setTotalPageCount();
-        this.getPaginatedTweets();
-        this.cd.detectChanges();
-      });
-
     this.dataService
       .getTweetData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((tweets) => {
-        this.allTweets = tweets;
-        this.totalTweets = tweets.length;
-        this.setTotalPageCount();
-        this.getPaginatedTweets();
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((tweets) => {
+          return combineLatest([
+            of(tweets),
+            this.paginationService.currentPageSubject,
+            this.paginationService.tweetsPerPageSubject,
+            this.paginationService.visibilityTypeSubject,
+          ]);
+        })
+      )
+      .subscribe(([tweets, newPage, newTweetsPerPage, newVisibilityType]) => {
+        const currentPage = newPage;
+        const tweetsPerPage = newTweetsPerPage;
+        const tweetsFilteredByVisibilityType = this.getTweetsPerVisibilityType(
+          newVisibilityType,
+          tweets
+        );
+        this.setTotalPageCount(
+          tweetsFilteredByVisibilityType.length,
+          tweetsPerPage
+        );
+        this.getPaginatedTweets(
+          tweetsFilteredByVisibilityType,
+          currentPage,
+          tweetsPerPage
+        );
         this.cd.detectChanges();
       });
   }
 
-  private setTotalPageCount() {
-    if (this.totalTweets && this.tweetsPerPage) {
-      const totalPageCount = Math.ceil(this.totalTweets / this.tweetsPerPage);
-      this.paginationService.totalPageCountSubject.next(totalPageCount);
+  private getTweetsPerVisibilityType(
+    visibilityType: VisibilityType,
+    tweets: Tweet[]
+  ): Tweet[] {
+    switch (visibilityType) {
+      case VisibilityType.AllTweets:
+        return tweets;
+
+      case VisibilityType.RetweetedTweets:
+        return tweets?.filter((tweet) => tweet.retweeted_status);
     }
   }
 
-  private getPaginatedTweets(): void {
-    const startIndex = (this.currentPage - 1) * this.tweetsPerPage!;
-    const endIndex = startIndex + this.tweetsPerPage!;
-    this.filteredTweets = this.allTweets?.slice(startIndex, endIndex);
+  private setTotalPageCount(
+    tweetsFilteredByVisibilityTypeLength: number,
+    tweetsPerPage: number
+  ) {
+    const totalPageCount = Math.ceil(
+      tweetsFilteredByVisibilityTypeLength / tweetsPerPage
+    );
+    this.paginationService.totalPageCountSubject.next(totalPageCount);
+  }
+
+  private getPaginatedTweets(
+    tweetsFilteredByVisibilityType: Tweet[] | undefined,
+    currentPage: number,
+    tweetsPerPage: number
+  ): void {
+    const startIndex = (currentPage - 1) * tweetsPerPage;
+    const endIndex = startIndex + tweetsPerPage;
+    this.tweets = tweetsFilteredByVisibilityType?.slice(startIndex, endIndex);
   }
 
   ngOnDestroy() {

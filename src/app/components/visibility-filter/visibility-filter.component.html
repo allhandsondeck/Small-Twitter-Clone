@@ -3,6 +3,7 @@
   aria-labelledby="example-radio-group-label"
   class="example-radio-group"
   [(ngModel)]="visibilityType"
+  (ngModelChange)="onVisibilityChange($event)"
 >
   <mat-radio-button
     class="example-radio-button"

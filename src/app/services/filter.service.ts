@@ -72,7 +72,7 @@ export class FilterService {
   setTotalPageCount(
     tweetsFilteredByVisibilityTypeLength: number,
     tweetsPerPage: number
-  ) {
+  ): void {
     const totalPageCount = Math.ceil(
       tweetsFilteredByVisibilityTypeLength / tweetsPerPage
     );

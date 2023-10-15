@@ -1,17 +1,18 @@
 <mat-form-field class="form-field">
-  <mat-label>@handel or name</mat-label>
+  <mat-label>@handle or name</mat-label>
   <input
     matInput
     type="text"
-    placeholder="@handel or name"
+    placeholder="@handle or name"
     [(ngModel)]="value"
+    (ngModelChange)="onSearchChange($event)"
   />
   <button
     *ngIf="value"
     matSuffix
     mat-icon-button
     aria-label="Clear"
-    (click)="value = ''"
+    (click)="clearSearch()"
   >
     <mat-icon>close</mat-icon>
   </button>

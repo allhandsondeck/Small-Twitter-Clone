@@ -35,33 +35,59 @@ export class TweetListComponent implements OnInit, OnDestroy {
         switchMap((tweets) => {
           return combineLatest([
             of(tweets),
+            this.paginationService.searchKeywordSubject,
+            this.paginationService.visibilityTypeSubject,
             this.paginationService.currentPageSubject,
             this.paginationService.tweetsPerPageSubject,
-            this.paginationService.visibilityTypeSubject,
           ]);
         })
       )
-      .subscribe(([tweets, newPage, newTweetsPerPage, newVisibilityType]) => {
-        const currentPage = newPage;
-        const tweetsPerPage = newTweetsPerPage;
-        const tweetsFilteredByVisibilityType = this.getTweetsPerVisibilityType(
+      .subscribe(
+        ([
+          tweets,
+          newSearchKeyword,
           newVisibilityType,
-          tweets
-        );
-        this.setTotalPageCount(
-          tweetsFilteredByVisibilityType.length,
-          tweetsPerPage
-        );
-        this.getPaginatedTweets(
-          tweetsFilteredByVisibilityType,
-          currentPage,
-          tweetsPerPage
-        );
-        this.cd.detectChanges();
-      });
+          newPage,
+          newTweetsPerPage,
+        ]) => {
+          const searchKeyword = newSearchKeyword;
+          const currentPage = newPage;
+          const tweetsPerPage = newTweetsPerPage;
+          const tweetsFilteredByHandleOrName =
+            this.getTweetsFilteredByHandleOrName(searchKeyword, tweets);
+          const tweetsFilteredByVisibilityType =
+            this.getTweetsFilteredByVisibilityType(
+              newVisibilityType,
+              tweetsFilteredByHandleOrName
+            );
+          this.tweets = this.getTweetsFilteredByPagination(
+            tweetsFilteredByVisibilityType,
+            currentPage,
+            tweetsPerPage
+          );
+          this.setTotalPageCount(
+            tweetsFilteredByVisibilityType.length,
+            tweetsPerPage
+          );
+          this.cd.detectChanges();
+        }
+      );
   }
 
-  private getTweetsPerVisibilityType(
+  private getTweetsFilteredByHandleOrName(
+    searchKeyword: string,
+    tweets: Tweet[]
+  ) {
+    return tweets.filter(
+      (tweet) =>
+        tweet.user.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+        tweet.user.screen_name
+          .toLowerCase()
+          .includes(searchKeyword.toLowerCase())
+    );
+  }
+
+  private getTweetsFilteredByVisibilityType(
     visibilityType: VisibilityType,
     tweets: Tweet[]
   ): Tweet[] {
@@ -84,14 +110,14 @@ export class TweetListComponent implements OnInit, OnDestroy {
     this.paginationService.totalPageCountSubject.next(totalPageCount);
   }
 
-  private getPaginatedTweets(
-    tweetsFilteredByVisibilityType: Tweet[] | undefined,
+  private getTweetsFilteredByPagination(
+    tweetsFilteredByVisibilityType: Tweet[],
     currentPage: number,
     tweetsPerPage: number
-  ): void {
+  ): Tweet[] {
     const startIndex = (currentPage - 1) * tweetsPerPage;
     const endIndex = startIndex + tweetsPerPage;
-    this.tweets = tweetsFilteredByVisibilityType?.slice(startIndex, endIndex);
+    return tweetsFilteredByVisibilityType.slice(startIndex, endIndex);
   }
 
   ngOnDestroy() {

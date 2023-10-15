@@ -1,4 +1,4 @@
-# CGI Assessment
+# Small Twitter Clone
 
 ## How to run the application locally?
 

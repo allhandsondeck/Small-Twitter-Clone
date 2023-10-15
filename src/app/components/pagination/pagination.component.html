@@ -1,12 +1,27 @@
-<mat-form-field class="example-form-field">
+<mat-form-field class="form-field">
   <mat-label>Post/page</mat-label>
-  <input matInput type="number" min="1" max="10" [(ngModel)]="value" />
+  <input
+    matInput
+    type="number"
+    min="1"
+    max="10"
+    [(ngModel)]="tweetsPerPage"
+    (ngModelChange)="onTweetsPerPageChange($event)"
+    placeholder="Post/page"
+  />
 </mat-form-field>
 
 <h2>Pages:</h2>
 
-<div class="example-button-row">
-  <button mat-raised-button>Basic</button>
-  <button mat-raised-button>Basic</button>
-  <button mat-raised-button>Basic</button>
+<div
+  class="page-count-button-container"
+  *ngIf="totalPageCount$ | async as totalTweets"
+>
+  <button
+    *ngFor="let page of range(totalTweets); let i = index"
+    mat-raised-button
+    (click)="onPageChange(i + 1)"
+  >
+    {{ i + 1 }}
+  </button>
 </div>

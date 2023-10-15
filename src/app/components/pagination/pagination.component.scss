@@ -1,12 +1,9 @@
-.example-form-field {
-  width: 150px;
+.form-field {
+  width: 120px;
 }
 
-.example-button-row button,
-.example-button-row a {
+.page-count-button-container button,
+.page-count-button-container a {
   margin-right: 8px;
-}
-
-.example-disabled {
-  display: inline-block;
+  margin-bottom: 8px;
 }

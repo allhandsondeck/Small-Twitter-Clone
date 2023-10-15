@@ -16,5 +16,6 @@ export class VisibilityFilterComponent {
 
   onVisibilityChange(newVisibilityType: VisibilityType) {
     this.paginationService.visibilityTypeSubject.next(newVisibilityType);
+    this.paginationService.currentPageSubject.next(1);
   }
 }

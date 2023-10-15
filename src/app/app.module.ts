@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
+import { HandleLinkPipe } from './pipes/handle-link.pipe';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { HttpClientModule } from '@angular/common/http';
     PaginationComponent,
     TweetListComponent,
     TweetItemComponent,
+    HandleLinkPipe,
   ],
   imports: [
     BrowserModule,
